@@ -1,10 +1,10 @@
 {
-  "name": "my-marketplace",
+  "name": "claude-plugin-test",
   "version": "1.0.0",
-  "description": "내 첫 번째 마켓플레이스",
+  "description": "claude-plugin-test",
   "owner": {
-    "name": "dongdong",
-    "email": "limdk@gmail.com"
+    "name": "LimDK",
+    "email": "ajsirh31@gmail.com"
   },
   "plugins": [
     {
