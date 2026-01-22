@@ -1,0 +1,8 @@
+{
+  "name": "greeter-plugin",
+  "version": "1.0.0",
+  "description": "시간대별 개인화된 인사 메시지를 제공하는 플러그인",
+  "author": {
+    "name": "LimDK"
+  }
+}

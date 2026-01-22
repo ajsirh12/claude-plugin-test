@@ -1,0 +1,16 @@
+# Local settings (user-specific)
+.claude/*.local.md
+
+# Generated reports (optional - uncomment if you don't want to track reports)
+# reports/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

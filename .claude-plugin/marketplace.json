@@ -1,0 +1,23 @@
+{
+  "name": "my-marketplace",
+  "version": "1.0.0",
+  "description": "내 첫 번째 마켓플레이스",
+  "owner": {
+    "name": "dongdong",
+    "email": "limdk@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "greeter-plugin",
+      "description": "인사하는 플러그인",
+      "version": "1.0.0",
+      "source": "./plugins/greeter-plugin"
+    },
+    {
+      "name": "work-report",
+      "description": "일간 보고서 작성 플러그인",
+      "version": "1.0.0",
+      "source": "./plugins/work-report"
+    }
+  ]
+}

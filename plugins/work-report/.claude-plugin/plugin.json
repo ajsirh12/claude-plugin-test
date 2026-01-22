@@ -1,0 +1,9 @@
+{
+  "name": "work-report",
+  "version": "1.1.0",
+  "description": "자동으로 작업 내용을 수집하여 일일/주간/월간 보고서를 생성하는 플러그인 (멀티 프로젝트 지원)",
+  "author": {
+    "name": "LimDK"
+  },
+  "keywords": ["report", "daily", "weekly", "git", "productivity", "automation", "multi-project"]
+}
