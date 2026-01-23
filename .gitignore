@@ -22,3 +22,4 @@ yarn-error.log*
 # Gemini/Claude CLI temporary files
 .gemini/
 .claude-plugin/cache/
+.claude/
