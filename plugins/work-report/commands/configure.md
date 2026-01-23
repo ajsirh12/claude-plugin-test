@@ -392,6 +392,28 @@ projects: []
   - `separate`: 각 프로젝트별 개별 보고서 생성
 - 기본값: `combined`
 
+### enable_session_logging
+- 설명: Claude 세션 작업 내용 자동 저장 (Opt-in)
+- 타입: boolean
+- 값: `true` (활성화), `false` (비활성화)
+- 기본값: `false`
+- 동작:
+  - 활성화 시 Claude 작업 완료 시점에 작업 요약이 자동 저장됨
+  - 저장 위치: `{output_dir}/sessions/session-{date}-{time}.md`
+  - **프라이버시 보호**: API 키, 비밀번호, 토큰 등 민감 정보는 저장되지 않음
+  - 요약만 저장 (전체 대화 기록 X)
+- 저장 내용:
+  - 작업 유형 (버그 수정, 기능 추가, 리팩토링 등)
+  - 변경된 파일 목록
+  - 주요 결정사항
+  - 수행 명령어 요약
+
+### session_log_dir
+- 설명: 세션 로그 저장 디렉토리 (enable_session_logging이 true일 때만 사용)
+- 타입: string (경로)
+- 기본값: `.claude/sessions`
+- 참고: Claude의 다른 설정/로그와 같은 위치에 저장하여 일관성 유지
+
 ### projects
 - 설명: 추가로 데이터를 수집할 프로젝트 목록
 - 타입: array

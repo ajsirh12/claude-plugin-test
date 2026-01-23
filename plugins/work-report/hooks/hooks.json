@@ -1,0 +1,17 @@
+{
+  "description": "work-report 세션 로깅 Hook - 작업 완료 시 요약 자동 저장 (Opt-in)",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/save-session-summary.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

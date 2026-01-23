@@ -60,6 +60,47 @@ git_branches: all
 | `git_branches` | Git 브랜치 범위 | `all` |
 | `report_mode` | 보고서 모드 (combined/separate) | `combined` |
 | `projects` | 추가 프로젝트 목록 | `[]` |
+| `enable_session_logging` | 세션 작업 요약 자동 저장 | `false` |
+| `session_log_dir` | 세션 로그 저장 디렉토리 | `.claude/sessions` |
+
+## 세션 로깅 (Opt-in)
+
+Claude 작업 세션의 내용을 자동으로 요약하여 저장하는 기능입니다.
+
+### 활성화 방법
+
+`.claude/work-report.local.md`에서 설정:
+
+```yaml
+enable_session_logging: true
+# session_log_dir: .claude/sessions  # 기본값, 변경 시 주석 해제
+```
+
+### 동작 방식
+
+1. Claude 작업 완료 시 Stop Hook이 트리거됨
+2. 설정이 활성화(`true`)되어 있으면 작업 요약 생성
+3. `.claude/sessions/` 디렉토리에 `session-{date}-{time}.md` 형식으로 저장
+
+### 저장되는 내용
+
+- 작업 유형 (버그 수정, 기능 추가, 리팩토링 등)
+- 변경된 파일 목록
+- 주요 결정사항
+- 수행한 명령어 요약
+
+### 프라이버시 보호
+
+**⚠️ 민감 정보 보호를 위해 다음 내용은 저장되지 않습니다:**
+
+- API 키, 토큰, 비밀번호
+- 경로의 사용자명 (익명화됨)
+- 환경변수 값
+- 전체 대화 기록 (요약만 저장)
+
+### 기본값이 `false`인 이유
+
+사용자 동의 없이 데이터가 저장되는 것을 방지하기 위해 **Opt-in 방식**을 채택했습니다. 세션 로깅을 원하면 명시적으로 `enable_session_logging: true`로 설정해야 합니다.
 
 ## 멀티 프로젝트 지원
 
