@@ -103,27 +103,6 @@ Always surface issues early:
 - What help is needed?
 - What risks exist?
 
-## Git Data Integration
-
-### Extracting Useful Information
-
-```bash
-# Today's commits with details
-git log --since="midnight" --format="%h %s" --author="$(git config user.email)"
-
-# Changed files
-git diff --stat HEAD~1
-
-# Lines added/removed
-git log --numstat --since="midnight" --format="" | awk '{add+=$1; del+=$2} END {print "+"add"/-"del}'
-```
-
-### Commit Message Quality
-Good commits make better reports:
-- `feat: Add user authentication with JWT`
-- `fix: Resolve memory leak in cache service`
-- `refactor: Simplify database connection handling`
-
 ## Language Guidelines
 
 ### Korean Reports
@@ -146,3 +125,9 @@ Before finalizing:
 - [ ] Blockers are highlighted
 - [ ] Typos checked
 - [ ] Formatting consistent
+
+## Additional Resources
+
+### Related Skills
+- **`data-source-patterns/SKILL.md`** - Detailed guide on extracting data from Git, Jira, Slack, etc.
+- **`automation-setup/SKILL.md`** - Guide on automating report generation.

@@ -9,8 +9,11 @@
 
 set -euo pipefail
 
+# 프로젝트 디렉토리 결정 (CLAUDE_PROJECT_DIR > PWD)
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PWD}"
+
 # 설정 파일 경로
-CONFIG_FILE="${CLAUDE_PROJECT_DIR}/.claude/work-report.local.md"
+CONFIG_FILE="${PROJECT_DIR}/.claude/work-report.local.md"
 
 # 설정 파일이 없으면 기본값(false)으로 처리
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -44,15 +47,17 @@ fi
 # 경로에서 따옴표 제거
 SESSION_LOG_DIR=$(echo "$SESSION_LOG_DIR" | tr -d '"' | tr -d "'")
 
-# 날짜/시간 생성
+# 날짜 생성 (같은 날짜는 같은 파일 사용)
 DATE=$(date +%Y-%m-%d)
-TIME=$(date +%H%M%S)
-FILENAME="session-${DATE}-${TIME}.md"
+FILENAME="session-${DATE}.md"
+FILEPATH="${SESSION_LOG_DIR}/${FILENAME}"
+TIMESTAMP=$(date +%H:%M:%S)
 
-# systemMessage로 Claude에게 요약 저장 지시 (간소화)
+# systemMessage로 Claude에게 요약 저장 지시
+# 파일이 있으면 append, 없으면 새로 생성
 cat << EOF
 {
   "decision": "approve",
-  "systemMessage": "[세션로깅] ${SESSION_LOG_DIR}/${FILENAME}에 작업요약 저장. 형식: 작업유형/변경파일/요약/다음할일. 민감정보(API키,비밀번호,사용자명) 제외."
+  "systemMessage": "[세션로깅] ${FILEPATH}에 작업기록 추가. 시간: ${TIMESTAMP}. 파일이 있으면 '---' 구분선 후 append, 없으면 새로 생성. 형식: ## ${TIMESTAMP} / 작업내용 1-2줄 요약. 민감정보 제외."
 }
 EOF
