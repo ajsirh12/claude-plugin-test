@@ -102,6 +102,19 @@ enable_session_logging: true
 
 사용자 동의 없이 데이터가 저장되는 것을 방지하기 위해 **Opt-in 방식**을 채택했습니다. 세션 로깅을 원하면 명시적으로 `enable_session_logging: true`로 설정해야 합니다.
 
+### 보고서에서 세션 로그 활용
+
+저장된 세션 로그를 보고서에 포함하려면 `add-project`로 claude 타입 프로젝트를 추가합니다:
+
+```yaml
+projects:
+  - name: "AI-작업"
+    type: "claude"
+    path: ".claude/sessions"        # 세션 로그 디렉토리
+    session_limit: 10               # 최근 10개 파일만
+    file_pattern: "session-*.md"    # 선택: 파일 필터
+```
+
 ## 멀티 프로젝트 지원
 
 여러 프로젝트의 작업 내용을 한 번에 수집하여 보고서를 생성할 수 있습니다.

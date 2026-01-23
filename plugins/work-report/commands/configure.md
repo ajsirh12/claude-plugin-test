@@ -170,15 +170,37 @@ options:
 
 **claude 타입:**
 ```
+질문: "Claude 세션 데이터 소스를 선택해주세요"
+header: "소스"
+options:
+  - label: "세션 로그 경로 (Recommended)"
+    description: "저장된 세션 로그 파일들을 읽어서 사용 (예: .claude/sessions)"
+  - label: "scope 기반"
+    description: "current/recent/project 범위로 수집"
+```
+
+**claude - 경로 선택 시:**
+```
+질문: "세션 로그 디렉토리 경로를 입력해주세요"
+header: "경로"
+options:
+  - label: ".claude/sessions (Recommended)"
+    description: "기본 세션 로그 저장 위치"
+  - label: "직접 입력"
+    description: "다른 경로 지정 (예: C:/logs/claude-sessions)"
+```
+
+**claude - scope 선택 시:**
+```
 질문: "Claude 대화 범위를 선택해주세요"
 header: "범위"
 options:
   - label: "current"
     description: "현재 세션의 대화만 수집"
   - label: "recent"
-    description: "최근 세션들의 대화 수집 (기간 내)"
+    description: "최근 세션들의 대화 수집"
   - label: "project"
-    description: "특정 프로젝트 관련 대화만 수집 (태그/키워드 기반)"
+    description: "키워드 기반 필터링"
 ```
 
 **asana 타입:**
@@ -196,6 +218,11 @@ options:
 **git:**
 - 디렉토리 존재 여부 확인
 - .git 폴더 존재 여부 확인
+
+**claude (path 기반):**
+- 디렉토리 존재 여부 확인
+- .md 파일 존재 여부 확인
+- 파일이 없으면 경고: "세션 로그 파일이 없습니다. enable_session_logging을 활성화하세요."
 
 **jira/slack/asana:**
 - 해당 MCP 서버가 설정되어 있는지 확인
@@ -240,6 +267,13 @@ projects:
     git_author: "dev@example.com"
     git_branches: "main"
 
+  # Claude 세션 로그 예시 (경로 기반)
+  - name: "AI-작업"
+    type: "claude"
+    path: ".claude/sessions"
+    session_limit: 10
+    file_pattern: "session-*.md"
+
   # Jira 프로젝트 예시
   - name: "스프린트-관리"
     type: "jira"
@@ -251,11 +285,6 @@ projects:
     type: "slack"
     channel: "dev-team"
     include_threads: true
-
-  # Asana 프로젝트 예시
-  - name: "마케팅-캠페인"
-    type: "asana"
-    project_id: "1234567890"
 ```
 
 #### 완료 메시지
@@ -428,9 +457,12 @@ projects: []
 - `git_branches`: Git 브랜치 범위 (선택)
 
 #### claude 타입
-- `scope`: 대화 수집 범위 (필수) - `current`, `recent`, `project`
+- `path`: 세션 로그 디렉토리 경로 (선택) - git처럼 경로 지정 가능
+- `scope`: 대화 수집 범위 (선택) - `current`, `recent`, `project`
 - `keywords`: 필터링 키워드 (선택, scope가 project일 때 사용)
-- `session_limit`: 수집할 최대 세션 수 (선택, 기본: 10)
+- `session_limit`: 수집할 최대 세션/파일 수 (선택, 기본: 10)
+- `file_pattern`: 파일 필터 패턴 (선택, path 사용 시) - 예: `session-2024-01-*.md`
+- 참고: `path`와 `scope` 중 하나는 필수. path 지정 시 해당 디렉토리의 세션 로그 파일들을 읽음
 
 #### jira 타입
 - `project_key`: Jira 프로젝트 키 (필수, 예: DEV, PROJ)
@@ -460,12 +492,14 @@ projects:
     git_author: "backend@team.com"
     git_branches: "main,develop"
 
-  # Claude 대화 기록
+  # Claude 세션 로그 (경로 기반 - 권장)
   - name: "AI-작업"
     type: "claude"
-    scope: "recent"
+    path: ".claude/sessions"
     session_limit: 5
+    file_pattern: "session-2024-01-*.md"  # 선택: 특정 기간만
 
+  # Claude 대화 기록 (scope 기반)
   - name: "플러그인-개발"
     type: "claude"
     scope: "project"
