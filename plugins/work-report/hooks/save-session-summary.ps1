@@ -49,7 +49,7 @@ $time = Get-Date -Format "HHmmss"
 $filename = "session-$date-$time.md"
 
 # systemMessage 출력 (간소화)
-$systemMessage = "[세션로깅] $sessionLogDir/$filename에 작업요약 저장. 형식: 작업유형/변경파일/요약/다음할일. 민감정보(API키,비밀번호,사용자명) 제외."
+$systemMessage = "[Session Logging] Save work summary to $sessionLogDir/$filename. Format: task-type/changed-files/summary/next-steps. Exclude sensitive info (API keys, passwords, usernames)."
 
 $output = @{
     decision = "approve"
