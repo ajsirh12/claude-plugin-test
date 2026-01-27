@@ -17,6 +17,7 @@ Guide for collecting work data from various sources: Git, Claude sessions, Jira,
 |--------|------|--------------|----------------|
 | Git | Built-in | Git repository | Commits, diffs, stats |
 | Claude | Built-in | Session logging enabled | Work summaries, decisions |
+| Notion | MCP | Notion MCP server | Pages, databases, tasks, notes |
 | Jira | MCP | Jira MCP server | Issues, worklogs, sprints |
 | Slack | MCP | Slack MCP server | Messages, threads |
 
@@ -125,6 +126,119 @@ Feature Development
 - npm install react-query
 - npm run test
 ```
+
+## Notion Integration
+
+### Prerequisites
+
+1. Notion MCP server configured in `.mcp.json` (자동 포함됨)
+2. Notion API Integration Token
+
+### Authentication Setup
+
+1. **Notion Integration 생성**:
+   - Notion 설정 → [Integrations](https://www.notion.so/my-integrations)
+   - "New Integration" 클릭
+   - Integration 이름 입력 (예: "Work Report")
+   - Internal Integration Token 복사
+
+2. **환경변수 설정**:
+   ```bash
+   # Windows (PowerShell)
+   $env:NOTION_API_TOKEN = "secret_xxx..."
+
+   # Windows (CMD)
+   setx NOTION_API_TOKEN "secret_xxx..."
+
+   # Linux/macOS
+   export NOTION_API_TOKEN="secret_xxx..."
+   ```
+
+3. **데이터베이스 연결**:
+   - 사용할 Notion 페이지/데이터베이스 열기
+   - 우측 상단 "..." → "Add connections"
+   - 생성한 Integration 선택
+
+### Configuration
+
+```yaml
+data_sources:
+  - notion
+
+projects:
+  - name: "Tasks"
+    type: "notion"
+    database_id: "abc123def456"  # Tasks 데이터베이스 ID
+    filters:
+      assignee: "me"
+      status: ["In Progress", "Done"]
+      date_property: "Updated"
+      date_range: "this_week"
+```
+
+### Database ID 찾기
+
+Notion URL에서 Database ID 확인:
+```
+https://notion.so/workspace/[DATABASE_ID]?v=...
+                            ^^^^^^^^^^^^^^^^
+```
+
+또는 데이터베이스 공유 링크에서:
+```
+https://notion.so/[DATABASE_ID]
+```
+
+### Available Filters
+
+```yaml
+# 상태 기반 필터
+filters:
+  status: ["Done", "In Progress"]
+
+# 담당자 필터
+filters:
+  assignee: "me"  # 또는 특정 이메일
+
+# 날짜 범위
+filters:
+  date_property: "Updated"
+  date_range: "this_week"  # today, this_week, this_month
+
+# 우선순위
+filters:
+  priority: ["High", "Medium"]
+
+# 태그/카테고리
+filters:
+  tags: ["frontend", "backend"]
+```
+
+### Data Collected from Notion
+
+**Tasks Database**:
+- Task title and description
+- Status (Not Started, In Progress, Done)
+- Assignee
+- Due date
+- Priority
+- Tags/Categories
+- Created/Updated time
+
+**Projects Database**:
+- Project name
+- Status and progress
+- Team members
+- Start/End dates
+- Milestones
+
+**Pages (Daily Notes, Meeting Notes)**:
+- Page title and content
+- Creation/Update time
+- Comments
+- Sub-pages
+
+For detailed Notion patterns, see `references/notion-patterns.md`.
 
 ## Jira Integration
 
