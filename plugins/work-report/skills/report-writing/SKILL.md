@@ -126,7 +126,241 @@ Before finalizing:
 - [ ] Typos checked
 - [ ] Formatting consistent
 
+## Enhanced Report Format (v2.0)
+
+### New Features
+
+The enhanced report format includes:
+
+1. **📊 Dashboard Section**
+   - KPI cards with week-over-week comparison
+   - Activity trend sparklines (▁▂▃▅▆▇█)
+   - Time-based activity heatmap (🟥🟧🟨🟩⬜)
+
+2. **📈 Visual Elements**
+   - Progress bars using Unicode blocks (████████░░)
+   - Trend indicators (📈 📉 ➡️)
+   - Distribution charts
+   - Status indicators (🟢 🟡 🔴)
+
+3. **🔍 Code Insights**
+   - Top 10 hotspot files analysis
+   - File type distribution
+   - Commit quality scoring
+   - Work pattern analysis
+
+4. **📊 Comparative Analysis**
+   - Period-over-period comparison tables
+   - Goal tracking with achievement rates
+   - Trend visualization
+
+5. **🧠 Intelligent Analysis**
+   - Automatic pattern detection
+   - Productivity metrics
+   - Risk identification
+   - Actionable recommendations
+
+### Templates
+
+Two report templates are available:
+
+#### Standard Template (Original)
+- Traditional text-based format
+- Tables and bullet points
+- Suitable for simple reports
+- Located in main SKILL.md
+
+#### Enhanced Template (v2.0)
+- Visual-rich format with charts
+- Insights and analytics
+- Comparison features
+- Located at `templates/enhanced-report-template.md`
+
+### Helper Scripts
+
+Use these scripts to generate report components:
+
+#### Period Comparison
+```bash
+# Bash
+./scripts/compare-periods.sh "1 week ago" "now" "2 weeks ago" "1 week ago"
+
+# PowerShell
+.\scripts\compare-periods.ps1 -CurrentSince "1 week ago" -CurrentUntil "now"
+```
+
+**Output**: Week-over-week comparison table with trends
+
+#### Hotspot Analysis
+```bash
+# Bash
+./scripts/analyze-hotspots.sh "1 week ago"
+
+# PowerShell
+.\scripts\analyze-hotspots.ps1 -Since "1 week ago"
+```
+
+**Output**: Top 10 frequently changed files with risk levels
+
+#### Pattern Analysis
+```bash
+# Bash
+./scripts/analyze-patterns.sh "1 week ago"
+
+# PowerShell
+.\scripts\analyze-patterns.ps1 -Since "1 week ago"
+```
+
+**Output**: Time-of-day and day-of-week activity patterns
+
+### Configuration
+
+Enable enhanced reporting in `.claude/work-report.local.md`:
+
+```yaml
+# Report format selection
+report_format: enhanced  # or "standard"
+
+# Visual elements
+enable_visualizations: true
+enable_insights: true
+enable_comparisons: true
+
+# Goal tracking (optional)
+weekly_goals:
+  commits: 40
+  test_coverage: 75
+  bugs_fixed: 5
+  docs_pages: 10
+```
+
+### Visual Element Examples
+
+#### Progress Bars
+```
+████████░░ 80%  # High completion
+█████░░░░░ 50%  # Half complete
+███░░░░░░░ 30%  # Low completion
+```
+
+#### Sparklines
+```
+커밋 활동:  ▂▃▅▆▇█▇▅  # Weekly trend
+코드 변경:  ▁▃▄▆▇▇▅▃  # Code churn
+```
+
+#### Heatmaps
+```
+      00-06  06-12  12-18  18-24
+월    ⬜⬜⬜  ⬜⬜⬜  🟨🟨🟨  🟩🟩🟩
+화    ⬜⬜⬜  ⬜⬜⬜  🟧🟧🟧  🟨🟨🟨
+```
+
+#### Status Indicators
+- 🟢 정상 - Normal, healthy state
+- 🟡 주의 - Warning, needs attention
+- 🔴 핫스팟 - Critical, requires action
+- ✅ 완료 - Completed
+- ⚠️ 진행중 - In progress
+- 🔴 블로커 - Blocked
+
+### Insights Generation
+
+The enhanced format automatically generates insights:
+
+**File Hotspots**:
+- Files changed ≥8 times: 🔴 High risk, consider refactoring
+- Files changed 5-7 times: 🟡 Moderate risk, monitor
+- Files changed <5 times: 🟢 Normal activity
+
+**Commit Quality**:
+- Average 20-50 lines: ✅ Optimal size
+- Average <20 lines: ⚠️ Too small, consider consolidation
+- Average >50 lines: ⚠️ Too large, consider splitting
+
+**Work Patterns**:
+- Identifies peak productivity hours
+- Highlights most productive days
+- Detects unusual activity patterns
+
+**Trends**:
+- 📈 Positive trend (>5% increase)
+- 📉 Negative trend (>5% decrease)
+- ➡️ Stable trend (±5% change)
+
+### Best Practices for Enhanced Reports
+
+1. **Use Visualizations Wisely**
+   - Progress bars for percentages and completion rates
+   - Sparklines for multi-day trends
+   - Heatmaps for time-based patterns
+   - Tables for detailed comparisons
+
+2. **Highlight Key Insights**
+   - Place important findings in dashboard
+   - Use status indicators for quick scanning
+   - Include actionable recommendations
+
+3. **Provide Context**
+   - Always compare to previous periods
+   - Show trends, not just snapshots
+   - Explain why metrics matter
+
+4. **Keep It Readable**
+   - Don't overuse emojis
+   - Maintain clear section hierarchy
+   - Balance visuals with text
+
+5. **Focus on Action**
+   - Identify blockers and risks
+   - Suggest next steps
+   - Track goal progress
+
+### Migration from Standard to Enhanced
+
+To upgrade existing reports:
+
+1. Update configuration:
+   ```yaml
+   report_format: enhanced
+   ```
+
+2. Enable new features:
+   ```yaml
+   enable_visualizations: true
+   enable_insights: true
+   enable_comparisons: true
+   ```
+
+3. Set baseline goals (optional):
+   ```yaml
+   weekly_goals:
+     commits: <your_target>
+     test_coverage: <your_target>
+   ```
+
+4. Run report generation - enhanced template will be used automatically
+
+### Customization
+
+Customize the enhanced template:
+
+1. Copy `templates/enhanced-report-template.md`
+2. Modify sections as needed
+3. Update configuration to point to custom template:
+   ```yaml
+   custom_template: path/to/your-template.md
+   ```
+
 ## Additional Resources
+
+### Templates
+- **`templates/enhanced-report-template.md`** - Visual-rich report template with insights
+
+### Helper Scripts
+- **`scripts/compare-periods.sh|.ps1`** - Period-over-period comparison
+- **`scripts/analyze-hotspots.sh|.ps1`** - File hotspot detection
+- **`scripts/analyze-patterns.sh|.ps1`** - Work pattern analysis
 
 ### Related Skills
 - **`data-source-patterns/SKILL.md`** - Detailed guide on extracting data from Git, Jira, Slack, etc.
