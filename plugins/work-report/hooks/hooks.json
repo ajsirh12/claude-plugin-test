@@ -7,7 +7,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"${CLAUDE_PLUGIN_ROOT}/hooks/save-session-summary.ps1\"",
+            "comment": "Cross-platform hook: tries bash first (Linux/macOS), then PowerShell (Windows)",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/save-session-summary.sh\" 2>/dev/null || powershell -ExecutionPolicy Bypass -File \"${CLAUDE_PLUGIN_ROOT}/hooks/save-session-summary.ps1\"",
             "timeout": 30
           }
         ]

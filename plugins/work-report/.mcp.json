@@ -2,6 +2,6 @@
   "notion": {
     "type": "sse",
     "url": "https://mcp.notion.com/mcp",
-    "description": "Notion MCP server for accessing workspace pages, databases, and tasks"
+    "description": "Notion MCP server for accessing workspace pages, databases, and tasks. Required: NOTION_API_TOKEN environment variable (see README.md section 'Notion 통합' for setup)"
   }
 }
