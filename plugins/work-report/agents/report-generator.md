@@ -155,7 +155,157 @@ Store collected data per project:
 }
 ```
 
-### Step 4: Collect Notion Data (If Enabled)
+### Step 4: Collect Slack Data (If Enabled)
+
+**Check if Slack is enabled**:
+```yaml
+# In configuration
+data_sources:
+  - slack
+```
+
+If enabled, collect and summarize messages from Slack channels:
+
+#### Slack Data Collection Process
+
+1. **Check for Slack projects in configuration**:
+   ```yaml
+   projects:
+     - name: "team-chat"
+       type: "slack"
+       channel: "dev-team"
+       include_threads: true
+   ```
+
+2. **Use Slack MCP tools** to query data:
+   - `mcp__plugin_work_report_slack__conversations_history` - Get channel messages
+   - `mcp__plugin_work_report_slack__conversations_replies` - Get thread replies
+   - `mcp__plugin_work_report_slack__users_info` - Get user info for names
+
+3. **Collect from each Slack channel**:
+   ```javascript
+   For each Slack project:
+     - Get channel ID from channel name
+     - Fetch messages within date range (based on report type)
+     - If include_threads: true, fetch thread replies
+     - Resolve user IDs to display names
+     - Extract relevant fields:
+       * timestamp
+       * user (display name)
+       * text (message content)
+       * thread_ts (if thread)
+       * reactions (emoji reactions)
+   ```
+
+4. **Summarize messages** (IMPORTANT - 메시지 요약):
+   Raw messages are NOT included directly. Instead, summarize discussions:
+   ```javascript
+   summarize_slack_messages(messages) {
+     // Group messages by topic/thread
+     // Identify key discussions
+     // Extract decisions made
+     // Note important announcements
+     // Ignore small talk / off-topic
+
+     return {
+       key_discussions: [...],    // Main topics discussed
+       decisions: [...],          // Decisions made
+       announcements: [...],      // Important announcements
+       action_items: [...],       // Action items mentioned
+       message_count: N,          // Total messages
+       active_participants: [...]  // Who participated
+     }
+   }
+   ```
+
+5. **Handle Slack-specific filters**:
+   ```yaml
+   # Date range mapping
+   date_range: "today"      → oldest=startOfDay
+   date_range: "this_week"  → oldest=startOfWeek
+   date_range: "this_month" → oldest=startOfMonth
+
+   # Message limits (to avoid rate limiting)
+   limit: 200              → Max messages per channel
+   ```
+
+6. **Error handling**:
+   - If Slack MCP not connected: Skip Slack data, log warning, offer setup guidance
+   - If channel not found: Skip that channel, continue with others
+   - If rate limit exceeded: Retry with exponential backoff
+   - If authentication fails: Inform user to check SLACK_BOT_TOKEN
+   - If not_in_channel error: Inform user to invite bot (for private channels)
+
+#### Slack Data Structure
+
+Store collected Slack data:
+```javascript
+{
+  "project_name": {
+    "type": "slack",
+    "channel": "dev-team",
+    "channel_id": "C1234567890",
+    "summary": {
+      "key_discussions": [
+        {
+          "topic": "API 성능 최적화",
+          "summary": "Redis 캐싱 도입 결정, 응답 시간 50% 개선 목표",
+          "participants": ["김철수", "이영희"],
+          "thread_count": 5
+        }
+      ],
+      "decisions": [
+        "Redis 캐싱 레이어 도입 결정",
+        "다음 스프린트에서 구현 예정"
+      ],
+      "announcements": [
+        "금요일 배포 일정 변경 (14:00 → 16:00)"
+      ],
+      "action_items": [
+        "김철수: Redis 설계 문서 작성",
+        "이영희: 기존 캐시 로직 리뷰"
+      ]
+    },
+    "stats": {
+      "message_count": 45,
+      "thread_count": 8,
+      "active_participants": 6,
+      "date_range": "2024-01-15 ~ 2024-01-18"
+    }
+  }
+}
+```
+
+#### Slack Report Section Format
+
+```markdown
+## 💬 Slack 논의 요약
+
+### #dev-team (45개 메시지, 8개 스레드)
+
+**📌 주요 논의:**
+1. **API 성능 최적화**
+   - Redis 캐싱 도입 결정
+   - 응답 시간 50% 개선 목표
+   - 참여: 김철수, 이영희 외 3명
+
+2. **테스트 자동화 전략**
+   - E2E 테스트 프레임워크 선정 (Playwright)
+   - CI 파이프라인 통합 계획
+
+**✅ 결정사항:**
+- Redis 캐싱 레이어 도입 결정
+- 다음 스프린트에서 구현 예정
+
+**📢 공지사항:**
+- 금요일 배포 일정 변경 (14:00 → 16:00)
+
+**📝 Action Items:**
+- [ ] 김철수: Redis 설계 문서 작성
+- [ ] 이영희: 기존 캐시 로직 리뷰
+```
+
+### Step 5: Collect Notion Data (If Enabled)
 
 **Check if Notion is enabled**:
 ```yaml
@@ -343,50 +493,73 @@ Add:
 
 1. **Completed Tasks Section**:
    ```
-   Git commits + Notion done tasks = Comprehensive completed work list
+   Git commits + Notion done tasks + Slack decisions = Comprehensive completed work list
 
    Example:
    - ✅ [Git] feat: Add user authentication (commit a1b2c3d)
    - ✅ [Notion] API 성능 최적화 완료 (Task #123, Priority: High)
    - ✅ [Git] fix: Login redirect bug (commit e4f5g6h)
    - ✅ [Notion] 사용자 대시보드 UI 개선 (Task #124, Done: 01/18)
+   - ✅ [Slack] Redis 캐싱 전략 결정 (#dev-team 논의)
    ```
 
 2. **In Progress Section**:
    ```
-   Primarily from Notion in-progress tasks
+   From Notion in-progress tasks + Slack ongoing discussions
 
    Example:
    - 🔄 [Notion] 테스트 자동화 구축 (60% complete, Due: 01/20)
    - 🔄 [Notion] 모바일 반응형 적용 (In Progress)
+   - 🔄 [Slack] 성능 최적화 방안 논의 중 (#dev-team)
    ```
 
 3. **Next Plans Section**:
    ```
-   From Notion not-started tasks + conversation context
+   From Notion not-started tasks + Slack action items + conversation context
 
    Example:
    - 📅 [Notion] API 문서 업데이트 (Planned, Priority: Medium)
    - 📅 [Notion] 성능 모니터링 대시보드 구축 (Planned)
+   - 📅 [Slack] Redis 설계 문서 작성 (@김철수)
    ```
 
-4. **Retrospective Section**:
+4. **Team Discussions Section** (NEW - Slack only):
    ```
-   Conversation insights + Notion daily notes
+   Summarized Slack conversations
+
+   Example:
+   ## 💬 팀 논의 요약
+
+   ### #dev-team
+   **주요 논의:**
+   - API 성능 최적화: Redis 캐싱 도입 결정
+   - 테스트 전략: Playwright 채택
+
+   **결정사항:**
+   - Redis 캐싱 레이어 다음 스프린트 구현
+   - E2E 테스트 CI 파이프라인 통합
+   ```
+
+5. **Retrospective Section**:
+   ```
+   Conversation insights + Notion daily notes + Slack retrospective discussions
 
    Example:
    배운 점:
    - [Claude] JWT 리프레시 토큰 전략 이해
    - [Notion] Redis 캐싱 패턴 적용 경험
+   - [Slack] 팀 코드 리뷰 피드백
 
    블로커:
    - [Notion] 외부 API 응답 지연 문제 (평균 2초)
+   - [Slack] 인프라팀 응답 대기 중
    ```
 
 **Cross-validation**:
 - If same task appears in both Git (commit) and Notion (done), merge them
-- Show both sources for transparency
-- Use Notion for detailed task info, Git for code changes
+- Link Slack discussions to related Git commits or Notion tasks when possible
+- Show all sources for transparency
+- Use Notion for detailed task info, Git for code changes, Slack for context/decisions
 
 ### Step 8: Save Report
 1. Create output directory if it doesn't exist

@@ -5,6 +5,44 @@ All notable changes to the work-report plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2025-01-29
+
+### Added
+- **Slack Integration** (⭐ Major Feature)
+  - Plugin-level MCP configuration for automatic Slack server inclusion
+  - No global MCP setup required - plug & play (same as Notion)
+  - Support for public and private channel message retrieval
+  - **Message summarization** for report-friendly output
+    - Key discussions extraction
+    - Decision tracking
+    - Announcements identification
+    - Action items collection
+  - Thread support with `include_threads` option
+  - Channel access documentation (Public vs Private)
+  - Comprehensive setup guide with troubleshooting
+- **Enhanced MCP Validation** (`/work-report:check-mcp`)
+  - Now supports both Notion and Slack validation
+  - Interactive setup guidance when MCP not connected
+  - Service-specific argument support (`slack`, `notion`)
+  - Detailed permission and scope guidance
+- **Slack Patterns Reference**
+  - Updated `skills/data-source-patterns/references/slack-patterns.md`
+  - Bot permission requirements
+  - Rate limiting guidance
+  - Best practices for channel selection
+
+### Changed
+- Updated `.mcp.json` to include both Notion and Slack MCP servers
+- Enhanced `report-generator` agent with Slack data collection logic
+- Updated data integration to merge Slack discussions with Git/Notion data
+- Added "Team Discussions" section in reports for Slack summaries
+- Updated README with Slack integration documentation
+
+### Technical
+- New environment variable: `SLACK_BOT_TOKEN`
+- Slack MCP URL: `https://mcp.slack.com/sse`
+- Report sections now include Slack-sourced action items and decisions
+
 ## [1.5.0] - 2024-01-27
 
 ### Added
@@ -168,7 +206,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Planned
 - Jira integration via MCP
-- Slack integration via MCP
 - Custom report templates
 - Report scheduling within Claude Code
 - Export formats (PDF, HTML)
@@ -178,6 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **1.6.0**: Slack integration, message summarization, enhanced MCP validation
 - **1.5.0**: Notion integration, cross-platform hooks, MCP validation
 - **1.4.0**: Enhanced reports v2.0 with visualizations and insights
 - **1.3.0**: Granular skills organization

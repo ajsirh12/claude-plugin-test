@@ -23,3 +23,6 @@ yarn-error.log*
 .gemini/
 .claude-plugin/cache/
 .claude/
+
+# MCP config with tokens (security)
+**/.claude-plugin/.mcp.json

@@ -24,9 +24,9 @@
 
 - **Git**: 커밋 로그, 변경 통계 (기본 활성화)
 - **Claude**: 현재 세션 대화 내용 분석 (기본 활성화)
-- **Notion**: 페이지, 데이터베이스, 작업 관리 (선택적, MCP 자동 포함) ⭐ NEW
+- **Notion**: 페이지, 데이터베이스, 작업 관리 (선택적, MCP 자동 포함)
+- **Slack**: 메시지 요약 및 논의 정리 (선택적, MCP 자동 포함) ⭐ NEW
 - **Jira**: 이슈 및 작업 내역 (선택적, 별도 MCP 필요)
-- **Slack**: 메시지 및 스레드 (선택적, 별도 MCP 필요)
 
 ## 설치
 
@@ -551,6 +551,131 @@ export NOTION_API_TOKEN="secret_xxx..."
 
 Notion 통합 패턴 및 예시는 다음 문서를 참조하세요:
 - **`skills/data-source-patterns/references/notion-patterns.md`** - 상세 패턴 및 예시
+
+## Slack 통합 (v1.6.0) ⭐ NEW
+
+### 개요
+
+Slack 채널의 대화 내용을 **요약**하여 보고서에 포함합니다.
+
+**통합 효과**:
+- Git 커밋 + Slack 논의 = 완전한 작업 맥락
+- 코드 변경 + 팀 결정사항 = 배경이 있는 보고서
+- 기술적 작업 + 팀 커뮤니케이션 = 협업 내역 기록
+
+### ⚡ 설정 불필요 (Plug & Play)
+
+**중요**: work-report 플러그인은 Slack MCP 서버를 자체 포함합니다.
+
+```
+✅ 필요한 것:
+1. work-report 플러그인 설치
+2. SLACK_BOT_TOKEN 환경변수 설정
+
+❌ 필요하지 않은 것:
+1. 글로벌 Claude CLI MCP 설정
+2. 별도 MCP 서버 설치
+3. ~/.claude/config.json 수정
+```
+
+### 빠른 시작
+
+#### 1. Slack App 생성
+
+1. [Slack API](https://api.slack.com/apps) 접속
+2. "Create New App" → "From scratch" 선택
+3. App 이름 입력 (예: "Work Report Bot")
+
+#### 2. Bot Token Scopes 설정
+
+**OAuth & Permissions** 페이지에서 추가:
+
+**필수 권한:**
+- `channels:history` (Public 채널 메시지 읽기)
+- `channels:read` (채널 목록 조회)
+- `users:read` (사용자 정보 조회)
+
+**선택 권한 (Private 채널용):**
+- `groups:history` (Private 채널 메시지 읽기)
+- `groups:read` (Private 채널 목록)
+
+#### 3. Install to Workspace
+
+"Install to Workspace" 클릭 → 권한 승인
+
+#### 4. 환경변수 설정
+
+```powershell
+# PowerShell
+$env:SLACK_BOT_TOKEN = "xoxb-your-token"
+
+# 영구 설정 (Windows)
+setx SLACK_BOT_TOKEN "xoxb-your-token"
+```
+
+```bash
+# Linux/macOS
+export SLACK_BOT_TOKEN="xoxb-your-token"
+```
+
+#### 5. 설정 추가
+
+`.claude/work-report.local.md`:
+
+```yaml
+---
+data_sources:
+  - git
+  - claude
+  - slack  # Slack 활성화
+
+projects:
+  - name: "team-discussions"
+    type: "slack"
+    channel: "dev-team"
+    include_threads: true
+---
+```
+
+### 채널 접근 권한
+
+| 채널 타입 | Bot 초대 필요 | 필요 권한 |
+|----------|--------------|----------|
+| Public 채널 | ❌ 불필요 | `channels:history`, `channels:read` |
+| Private 채널 | ✅ 필수 | `groups:history`, `groups:read` |
+| DM | - | ❌ 지원 안 함 |
+
+**💡 Public 채널은 Bot 초대 없이도 읽을 수 있습니다!**
+
+### 보고서 출력 예시
+
+```markdown
+## 💬 Slack 논의 요약
+
+### #dev-team (45개 메시지, 8개 스레드)
+
+**📌 주요 논의:**
+1. **API 성능 최적화**
+   - Redis 캐싱 도입 결정
+   - 응답 시간 50% 개선 목표
+
+**✅ 결정사항:**
+- Redis 캐싱 레이어 도입
+
+**📝 Action Items:**
+- [ ] 김철수: Redis 설계 문서 작성
+```
+
+### MCP 연결 확인
+
+```bash
+/work-report:check-mcp slack
+```
+
+### 상세 가이드
+
+Slack 통합 패턴 및 예시는 다음 문서를 참조하세요:
+- **`skills/data-source-patterns/references/slack-patterns.md`** - 상세 패턴 및 예시
 
 ## 라이선스
 

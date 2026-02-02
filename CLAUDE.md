@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a Claude Code plugin marketplace repository containing productivity tools. The primary plugin is **work-report** (v1.5.0), which generates automated daily/weekly/monthly reports from multiple data sources.
+This is a Claude Code plugin marketplace repository containing productivity tools. The primary plugin is **work-report** (v1.6.0), which generates automated daily/weekly/monthly reports from multiple data sources.
 
 ## Plugin Architecture
 
@@ -12,8 +12,8 @@ This is a Claude Code plugin marketplace repository containing productivity tool
 plugins/
 └── work-report/
     ├── .claude-plugin/
-    │   ├── plugin.json          # Plugin manifest
-    │   └── .mcp.json            # Embedded Notion MCP config
+    │   └── plugin.json          # Plugin manifest
+    ├── .mcp.json                 # MCP server config (Notion, Slack)
     ├── agents/                   # Autonomous task runners
     ├── commands/                 # Slash commands (/work-report:*)
     ├── hooks/                    # Lifecycle hooks (Stop event)
@@ -39,7 +39,12 @@ plugins/
 
 ## MCP Integration
 
-The plugin embeds its own Notion MCP server config (`.mcp.json`). No global MCP setup required - just set `NOTION_API_TOKEN` environment variable.
+The plugin embeds MCP server configs in `.mcp.json` (plugin root). Supported servers:
+
+- **Notion**: Requires `NOTION_API_TOKEN` environment variable
+- **Slack**: Requires `SLACK_BOT_TOKEN` environment variable
+
+No global MCP setup required.
 
 ## Cross-Platform Support
 

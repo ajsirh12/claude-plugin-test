@@ -24,13 +24,19 @@
 
 ### 2. 플러그인 레벨 MCP 설정 (자동)
 
-**위치**: `plugins/work-report/.mcp.json`
+**위치**: `plugins/work-report/.claude-plugin/.mcp.json`
 
 ```json
 {
-  "notion": {
-    "type": "sse",
-    "url": "https://mcp.notion.com/mcp"
+  "mcpServers": {
+    "notion": {
+      "type": "sse",
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "slack": {
+      "type": "sse",
+      "url": "https://mcp.slack.com/sse"
+    }
   }
 }
 ```
@@ -40,6 +46,7 @@
 - 플러그인 설치 시 자동으로 포함됨
 - 사용자 추가 설정 불필요
 - 플러그인 범위 내에서만 동작
+- Notion + Slack 모두 기본 포함
 
 ## 독립성 보장
 
@@ -51,13 +58,16 @@
    ├─ 글로벌 MCP 설정 없음 ✅ OK!
    └─ work-report 플러그인 설치
       └─ .mcp.json 자동 로드
-         └─ Notion MCP 연결 성공 ✅
+         ├─ Notion MCP 연결 성공 ✅
+         └─ Slack MCP 연결 성공 ✅
 ```
 
 **필요한 것**:
 1. ✅ Claude CLI 설치
 2. ✅ work-report 플러그인 설치
-3. ✅ `NOTION_API_TOKEN` 환경변수 설정
+3. ✅ 환경변수 설정 (사용할 서비스만)
+   - Notion: `NOTION_API_TOKEN`
+   - Slack: `SLACK_BOT_TOKEN`
 
 **필요하지 않은 것**:
 1. ❌ 글로벌 `~/.claude/config.json` MCP 설정
@@ -117,9 +127,15 @@ mcp__plugin_{plugin_name}_{server_name}__{tool_name}
 
 **work-report 예시**:
 ```
+# Notion MCP 도구
 mcp__plugin_work_report_notion__query_database
 mcp__plugin_work_report_notion__read_page
 mcp__plugin_work_report_notion__search
+
+# Slack MCP 도구
+mcp__plugin_work_report_slack__conversations_history
+mcp__plugin_work_report_slack__conversations_replies
+mcp__plugin_work_report_slack__users_info
 ```
 
 **글로벌 MCP 예시** (비교):

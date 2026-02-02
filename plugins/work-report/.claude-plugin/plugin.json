@@ -1,9 +1,9 @@
 {
   "name": "work-report",
-  "version": "1.5.0",
-  "description": "자동으로 작업 내용을 수집하여 일일/주간/월간 보고서를 생성하는 플러그인 (멀티 프로젝트 지원, 세션 로깅, 자동화, Enhanced v2.0 - 시각화 및 인사이트, Notion 통합)",
+  "version": "1.6.0",
+  "description": "자동으로 작업 내용을 수집하여 일일/주간/월간 보고서를 생성하는 플러그인 (멀티 프로젝트 지원, 세션 로깅, 자동화, Enhanced v2.0 - 시각화 및 인사이트, Notion/Slack 통합)",
   "author": {
     "name": "LimDK"
   },
-  "keywords": ["report", "daily", "weekly", "git", "productivity", "automation", "multi-project", "notion", "jira", "slack", "ci-cd", "visualization", "insights", "analytics"]
+  "keywords": ["report", "daily", "weekly", "git", "productivity", "automation", "multi-project", "notion", "jira", "slack", "ci-cd", "visualization", "insights", "analytics", "mcp"]
 }

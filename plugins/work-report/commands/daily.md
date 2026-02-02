@@ -61,13 +61,17 @@ for project in projects:
 
 ## 보고서 작성
 
-**report-writing 스킬의 Report Template 양식을 참조하여 보고서를 작성한다.**
+**report-writing 스킬의 Report Template 양식을 정확히 따라 보고서를 작성한다.**
 
 ### 양식 적용 방법
-1. `report-writing` 스킬의 "Report Structure" > "Report Template" 섹션에 정의된 표준 양식을 기본으로 사용
+1. `report-writing` 스킬의 "Report Structure" > "Report Template" 섹션에 정의된 표준 양식을 **정확히** 사용
 2. `[보고서 종류]`를 "일일"로 설정
 3. `기간`은 오늘 날짜 하루로 설정
 4. 수집된 Git 데이터와 대화 내용을 양식의 각 섹션에 맞게 채움
+
+### 제외 항목 (반드시 준수)
+- **커밋 내역 테이블 제외**: 개별 커밋의 해시, 메시지, 날짜를 나열하는 테이블은 포함하지 않음
+- **다음 날 계획 제외**: "내일 계획" 또는 유사한 미래 계획 섹션은 포함하지 않음
 
 ### report_mode별 처리
 - **combined**: 모든 프로젝트 데이터를 통합하여 하나의 보고서 생성
