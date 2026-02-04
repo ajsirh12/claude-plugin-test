@@ -59,6 +59,38 @@ for project in projects:
 - 작성/수정한 코드
 - 논의한 주제들
 
+### 4. Slack 데이터 수집 (data_sources에 slack이 포함된 경우)
+
+설정의 `data_sources`에 `slack`이 포함되어 있거나, `projects`에 `type: "slack"` 항목이 있는 경우 수집한다.
+
+#### 사전 조건 확인
+1. `SLACK_BOT_TOKEN` 환경변수 설정 확인
+2. MCP 연결 상태 확인 (연결 안 됨 시 경고 출력 후 스킵)
+
+#### 데이터 수집 절차
+projects에서 `type: "slack"`인 항목을 찾아 각각 처리:
+
+```
+for project in projects where type == "slack":
+  channel = project.channel
+  include_threads = project.include_threads || false
+  limit = project.limit || 50
+
+  1. 채널 접근 확인
+  2. 오늘 날짜 기준 메시지 수집 (since: midnight, 최근 24시간)
+  3. 메시지 분석 및 요약:
+     - 주요 논의 추출
+     - 결정사항 정리
+     - 공지사항 식별
+     - Action Items 추출
+```
+
+#### 출력 형식
+수집된 Slack 데이터는 report-writing 스킬의 "💬 Slack 논의 요약" 섹션 양식에 맞게 정리:
+- 채널별로 메시지 수, 스레드 수 표시
+- 주요 논의를 토픽별로 그룹화
+- 결정사항과 Action Items 명확히 분리
+
 ## 보고서 작성
 
 **report-writing 스킬의 Report Template 양식을 정확히 따라 보고서를 작성한다.**
